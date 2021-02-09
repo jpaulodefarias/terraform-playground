@@ -1,2 +1,2 @@
-# terraform-playground
+# terraform-practices
 Practices on learning Terraform
