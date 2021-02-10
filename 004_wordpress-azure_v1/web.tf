@@ -1,8 +1,8 @@
 # Create a Linux virtual machine
 resource "azurerm_virtual_machine" "vm" {
-  name                  = "myTFVM"
+  name                  = "wordpressVM"
   location              = var.location
-  resource_group_name   = azurerm_resource_group.rg.name
+  resource_group_name   = azurerm_resource_group.wordpress.name
   network_interface_ids = [azurerm_network_interface.nic.id]
   vm_size               = "Standard_DS1_v2"
 
@@ -21,7 +21,7 @@ resource "azurerm_virtual_machine" "vm" {
   }
 
   os_profile {
-    computer_name  = "myTFVM"
+    computer_name  = "wordpressVM"
     admin_username = var.admin_username
     admin_password = var.admin_password
     custom_data    = file("web.conf")

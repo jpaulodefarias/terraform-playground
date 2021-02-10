@@ -1,8 +1,8 @@
 # Create MySQL Server
-resource "azurerm_mysql_server" "rg" {
-  resource_group_name = azurerm_resource_group.rg.name
-  name                = "rg-mysql-server"
-  location            = azurerm_resource_group.rg.location
+resource "azurerm_mysql_server" "wordpress" {
+  resource_group_name = azurerm_resource_group.wordpress.name
+  name                = "wordpress-mysql-server"
+  location            = azurerm_resource_group.wordpress.location
   version             = "5.7"
 
   administrator_login          = var.database_admin_login
@@ -21,24 +21,24 @@ resource "azurerm_mysql_server" "rg" {
 }
 
 # Create MySql DataBase
-resource "azurerm_mysql_database" "rg" {
-  name                = "rg-mysql-db"
-  resource_group_name = azurerm_resource_group.rg.name
-  server_name         = azurerm_mysql_server.rg.name
+resource "azurerm_mysql_database" "wordpress" {
+  name                = "wordpress-mysql-db"
+  resource_group_name = azurerm_resource_group.wordpress.name
+  server_name         = azurerm_mysql_server.wordpress.name
   charset             = "utf8"
   collation           = "utf8_unicode_ci"
 }
 
 # Config MySQL Server Firewall Rule
-resource "azurerm_mysql_firewall_rule" "rg" {
-  name                = "rg-mysql-firewall-rule"
-  resource_group_name = azurerm_resource_group.rg.name
-  server_name         = azurerm_mysql_server.rg.name
+resource "azurerm_mysql_firewall_rule" "wordpress" {
+  name                = "wordpress-mysql-firewall-rule"
+  resource_group_name = azurerm_resource_group.wordpress.name
+  server_name         = azurerm_mysql_server.wordpress.name
   start_ip_address    = azurerm_public_ip.publicip.ip_address
   end_ip_address      = azurerm_public_ip.publicip.ip_address
 }
 
-data "azurerm_mysql_server" "rg" {
-  name                = azurerm_mysql_server.rg.name
-  resource_group_name = azurerm_resource_group.rg.name
+data "azurerm_mysql_server" "wordpress" {
+  name                = azurerm_mysql_server.wordpress.name
+  resource_group_name = azurerm_resource_group.wordpress.name
 }

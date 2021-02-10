@@ -1,32 +1,24 @@
-# Create a random string hostname
-resource "random_string" "fqdn" {
-  length  = 6
-  special = false
-  upper   = false
-  number  = false
-}
-
 # Create a virtual network
 resource "azurerm_virtual_network" "vnet" {
-  name                = "myTFVnet"
+  name                = "wordpressVnet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = azurerm_resource_group.wordpress.name
 }
 
 # Create subnet
 resource "azurerm_subnet" "subnet" {
-  name                 = "myTFSubnet"
-  resource_group_name  = azurerm_resource_group.rg.name
+  name                 = "wordpressSubnet"
+  resource_group_name  = azurerm_resource_group.wordpress.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
 # Create public IP
 resource "azurerm_public_ip" "publicip" {
-  name                = "myTFPublicIP"
+  name                = "wordpressPublicIP"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = azurerm_resource_group.wordpress.name
   allocation_method   = "Static"
   domain_name_label   = random_string.fqdn.result
 }
@@ -34,9 +26,9 @@ resource "azurerm_public_ip" "publicip" {
 
 # Create Network Security Group and rule
 resource "azurerm_network_security_group" "nsg" {
-  name                = "myTFNSG"
+  name                = "wordpressNSG"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = azurerm_resource_group.wordpress.name
 
   security_rule {
     name                       = "SSH"
@@ -67,7 +59,7 @@ resource "azurerm_network_security_group" "nsg" {
 resource "azurerm_network_interface" "nic" {
   name                = "myNIC"
   location            = var.location
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = azurerm_resource_group.wordpress.name
 
   ip_configuration {
     name                          = "myNICConfg"

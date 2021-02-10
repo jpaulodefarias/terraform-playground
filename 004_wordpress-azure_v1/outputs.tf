@@ -7,5 +7,5 @@ output "public_ip_fqdn" {
 }
 
 output "database_fqdn" {
-  value = data.azurerm_mysql_server.rg.fqdn
+  value = data.azurerm_mysql_server.wordpress.fqdn
 }
