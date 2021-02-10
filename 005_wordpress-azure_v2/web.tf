@@ -59,52 +59,31 @@ resource "azurerm_lb_rule" "lbnatrule" {
   probe_id                       = azurerm_lb_probe.wordpress.id
 }
 
-resource "azurerm_virtual_machine_scale_set" "wordpress" {
-  name                = "vmscaleset"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.wordpress.name
-  upgrade_policy_mode = "Manual"
+resource "azurerm_linux_virtual_machine_scale_set" "wordpress" {
+  name                            = "vmscaleset"
+  location                        = var.location
+  resource_group_name             = azurerm_resource_group.wordpress.name
+  sku                             = "Standard_DS1_v2"
+  instances                       = 2
+  admin_username                  = var.admin_username
+  admin_password                  = var.admin_password
+  disable_password_authentication = false
+  custom_data                     = data.template_cloudinit_config.config.rendered
 
-  sku {
-    name     = "Standard_DS1_v2"
-    tier     = "Standard"
-    capacity = 2
-  }
-
-  storage_profile_image_reference {
+  source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
     sku       = "18.04-LTS"
     version   = "latest"
   }
 
-  storage_profile_os_disk {
-    name              = ""
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
+  os_disk {
+    storage_account_type = "Standard_LRS"
+    caching              = "ReadWrite"
   }
 
-  storage_profile_data_disk {
-    lun           = 0
-    caching       = "ReadWrite"
-    create_option = "Empty"
-    disk_size_gb  = 10
-  }
-
-  os_profile {
-    computer_name_prefix = "vmlab"
-    admin_username       = var.admin_username
-    admin_password       = var.admin_password
-    custom_data          = file("web.conf")
-  }
-
-  os_profile_linux_config {
-    disable_password_authentication = false
-  }
-
-  network_profile {
-    name    = "terraformnetworkprofile"
+  network_interface {
+    name    = "NetworkInterface"
     primary = true
 
     ip_configuration {
@@ -116,4 +95,21 @@ resource "azurerm_virtual_machine_scale_set" "wordpress" {
   }
 
   tags = var.tags
+}
+
+data "template_file" "script" {
+  template = file("web.conf")
+}
+
+data "template_cloudinit_config" "config" {
+  gzip          = true
+  base64_encode = true
+
+  part {
+    filename     = "web.conf"
+    content_type = "text/cloud-config"
+    content      = data.template_file.script.rendered
+  }
+
+  depends_on = [azurerm_mysql_server.wordpress]
 }
