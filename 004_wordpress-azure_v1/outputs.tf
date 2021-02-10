@@ -1,11 +1,7 @@
-output "public_ip_address" {
-  value = data.azurerm_public_ip.ip.ip_address
-}
-
-output "public_ip_fqdn" {
+output "application_address" {
   value = azurerm_public_ip.publicip.fqdn
 }
 
-output "database_fqdn" {
+output "database_address" {
   value = data.azurerm_mysql_server.wordpress.fqdn
 }
