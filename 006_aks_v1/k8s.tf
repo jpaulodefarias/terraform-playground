@@ -28,18 +28,9 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     client_secret = azuread_service_principal_password.example.value
   }
 
-  # role_based_access_control {
-  #   enabled = true
-  # }
-
   addon_profile {
     kube_dashboard {
       enabled = true
-    }
-
-    oms_agent {
-      enabled                    = true
-      log_analytics_workspace_id = azurerm_log_analytics_workspace.test.id
     }
   }
 
