@@ -24,7 +24,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 
   service_principal {
-    client_id = azuread_service_principal.example.application_id
+    client_id     = azuread_service_principal.example.application_id
     client_secret = azuread_service_principal_password.example.value
   }
 

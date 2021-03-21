@@ -10,18 +10,22 @@
 #   value = azurerm_kubernetes_cluster.k8s.kube_config.0.cluster_ca_certificate
 # }
 
-output "kube_config" {
-  value = azurerm_kubernetes_cluster.k8s.kube_config_raw
-}
+# output "kube_config" {
+#   value = azurerm_kubernetes_cluster.k8s.kube_config_raw
+# }
 
-output "host" {
-  value = azurerm_kubernetes_cluster.k8s.kube_config.0.host
-}
+# output "host" {
+#   value = azurerm_kubernetes_cluster.k8s.kube_config.0.host
+# }
 
-output "cluster_username" {
-  value = azurerm_kubernetes_cluster.k8s.kube_config.0.username
-}
+# output "cluster_username" {
+#   value = azurerm_kubernetes_cluster.k8s.kube_config.0.username
+# }
 
-output "cluster_password" {
-  value = azurerm_kubernetes_cluster.k8s.kube_config.0.password
+# output "cluster_password" {
+#   value = azurerm_kubernetes_cluster.k8s.kube_config.0.password
+# }
+
+output "lb_ip" {
+  value = kubernetes_service.nginx.status.0.load_balancer.0.ingress.0.ip
 }
