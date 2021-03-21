@@ -26,6 +26,6 @@
 #   value = azurerm_kubernetes_cluster.k8s.kube_config.0.password
 # }
 
-output "lb_ip" {
+output "ip" {
   value = kubernetes_service.nginx.status.0.load_balancer.0.ingress.0.ip
 }
